@@ -1,0 +1,3677 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "航空测控微调平台后端执行接口",
+    "version": "0.2.0",
+    "description": "单卡 LoRA 训练与批量推理执行服务。服务间 Bearer 凭据绑定项目和操作者允许列表；实际开放能力以 capabilities 和部署文档为准。当前为工程验证版本，尚未完成航天领域效果及完整业务权限验收。"
+  },
+  "x-implementation-status": "implemented",
+  "security": [
+    {
+      "BackendServiceBearer": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "capabilities"
+    },
+    {
+      "name": "files"
+    },
+    {
+      "name": "datasets"
+    },
+    {
+      "name": "models"
+    },
+    {
+      "name": "training"
+    },
+    {
+      "name": "prediction"
+    },
+    {
+      "name": "artifacts"
+    }
+  ],
+  "paths": {
+    "/internal/v1/capabilities": {
+      "get": {
+        "operationId": "getCapabilities",
+        "summary": "查询执行能力与限制",
+        "tags": [
+          "capabilities"
+        ],
+        "x-implementation-status": "implemented",
+        "parameters": [
+          {
+            "name": "X-Project-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "仅接受已认证中台传递的授权上下文；不得单独作为授权凭据。"
+          },
+          {
+            "name": "X-Actor-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "须与中台身份及项目授权绑定校验，非用户任意指定的身份。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Capabilities"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "执行服务内部错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/internal/v1/files": {
+      "post": {
+        "operationId": "uploadFile",
+        "summary": "上传受管理文件",
+        "tags": [
+          "files"
+        ],
+        "x-implementation-status": "implemented",
+        "parameters": [
+          {
+            "name": "X-Project-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "仅接受已认证中台传递的授权上下文；不得单独作为授权凭据。"
+          },
+          {
+            "name": "X-Actor-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "须与中台身份及项目授权绑定校验，非用户任意指定的身份。"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "成功",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/File"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "执行服务内部错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "上传文件超出容量限制",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "purpose": {
+                    "type": "string",
+                    "enum": [
+                      "source_document",
+                      "training_data",
+                      "evaluation_data",
+                      "prediction_data"
+                    ]
+                  }
+                },
+                "required": [
+                  "file",
+                  "purpose"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/internal/v1/dataset-versions": {
+      "post": {
+        "operationId": "createDatasetVersion",
+        "summary": "注册不可变数据版本",
+        "tags": [
+          "datasets"
+        ],
+        "x-implementation-status": "implemented",
+        "parameters": [
+          {
+            "name": "X-Project-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "仅接受已认证中台传递的授权上下文；不得单独作为授权凭据。"
+          },
+          {
+            "name": "X-Actor-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "须与中台身份及项目授权绑定校验，非用户任意指定的身份。"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "成功",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetVersion"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "执行服务内部错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DatasetVersionCreate"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/internal/v1/dataset-versions/{dataset_version_id}": {
+      "get": {
+        "operationId": "getDatasetVersion",
+        "summary": "查询数据版本",
+        "tags": [
+          "datasets"
+        ],
+        "x-implementation-status": "implemented",
+        "parameters": [
+          {
+            "name": "X-Project-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "仅接受已认证中台传递的授权上下文；不得单独作为授权凭据。"
+          },
+          {
+            "name": "X-Actor-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "须与中台身份及项目授权绑定校验，非用户任意指定的身份。"
+          },
+          {
+            "name": "dataset_version_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetVersion"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "执行服务内部错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/internal/v1/models": {
+      "get": {
+        "operationId": "listManagedModels",
+        "summary": "查询受管理模型目录",
+        "tags": [
+          "models"
+        ],
+        "x-implementation-status": "implemented",
+        "parameters": [
+          {
+            "name": "X-Project-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "仅接受已认证中台传递的授权上下文；不得单独作为授权凭据。"
+          },
+          {
+            "name": "X-Actor-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "须与中台身份及项目授权绑定校验，非用户任意指定的身份。"
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "服务端返回的不透明游标"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "执行服务内部错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/internal/v1/training-runs": {
+      "post": {
+        "operationId": "createTrainingRun",
+        "summary": "创建一次训练执行",
+        "tags": [
+          "training"
+        ],
+        "x-implementation-status": "implemented",
+        "parameters": [
+          {
+            "name": "X-Project-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "仅接受已认证中台传递的授权上下文；不得单独作为授权凭据。"
+          },
+          {
+            "name": "X-Actor-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "须与中台身份及项目授权绑定校验，非用户任意指定的身份。"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "成功",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Run"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "执行服务内部错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrainingCreate"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/internal/v1/training-runs/{run_id}": {
+      "get": {
+        "operationId": "getTrainingRun",
+        "summary": "查询训练状态和产物",
+        "tags": [
+          "training"
+        ],
+        "x-implementation-status": "implemented",
+        "parameters": [
+          {
+            "name": "X-Project-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "仅接受已认证中台传递的授权上下文；不得单独作为授权凭据。"
+          },
+          {
+            "name": "X-Actor-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "须与中台身份及项目授权绑定校验，非用户任意指定的身份。"
+          },
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Run"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "执行服务内部错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/internal/v1/training-runs/{run_id}/cancel": {
+      "post": {
+        "operationId": "cancelTrainingRun",
+        "summary": "请求取消训练执行",
+        "tags": [
+          "training"
+        ],
+        "x-implementation-status": "implemented",
+        "parameters": [
+          {
+            "name": "X-Project-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "仅接受已认证中台传递的授权上下文；不得单独作为授权凭据。"
+          },
+          {
+            "name": "X-Actor-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "须与中台身份及项目授权绑定校验，非用户任意指定的身份。"
+          },
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "任务此前已取消",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Run"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "取消已接收或正在处理",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Run"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "执行服务内部错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "description": "重复取消请求幂等；已取消返回 200；成功或失败终态不再变更，返回 409。只有 cancelled 表示执行相关资源已释放。"
+      }
+    },
+    "/internal/v1/training-runs/{run_id}/logs": {
+      "get": {
+        "operationId": "getTrainingLogs",
+        "summary": "按游标查询训练日志",
+        "tags": [
+          "training"
+        ],
+        "x-implementation-status": "implemented",
+        "parameters": [
+          {
+            "name": "X-Project-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "仅接受已认证中台传递的授权上下文；不得单独作为授权凭据。"
+          },
+          {
+            "name": "X-Actor-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "须与中台身份及项目授权绑定校验，非用户任意指定的身份。"
+          },
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "服务端返回的不透明游标"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "执行服务内部错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/internal/v1/prediction-runs": {
+      "post": {
+        "operationId": "createPredictionRun",
+        "summary": "创建模型批量答题执行",
+        "tags": [
+          "prediction"
+        ],
+        "x-implementation-status": "implemented",
+        "parameters": [
+          {
+            "name": "X-Project-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "仅接受已认证中台传递的授权上下文；不得单独作为授权凭据。"
+          },
+          {
+            "name": "X-Actor-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "须与中台身份及项目授权绑定校验，非用户任意指定的身份。"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "成功",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Run"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "执行服务内部错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PredictionCreate"
+              }
+            }
+          }
+        },
+        "description": "返回逐题原始模型输出及结果产物，不计算题库业务得分。结果文件采用 UTF-8 JSONL，每行符合 PredictionRecord。"
+      }
+    },
+    "/internal/v1/prediction-runs/{run_id}": {
+      "get": {
+        "operationId": "getPredictionRun",
+        "summary": "查询批量答题执行",
+        "tags": [
+          "prediction"
+        ],
+        "x-implementation-status": "implemented",
+        "parameters": [
+          {
+            "name": "X-Project-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "仅接受已认证中台传递的授权上下文；不得单独作为授权凭据。"
+          },
+          {
+            "name": "X-Actor-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "须与中台身份及项目授权绑定校验，非用户任意指定的身份。"
+          },
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Run"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "执行服务内部错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/internal/v1/artifacts/{artifact_id}/content": {
+      "get": {
+        "operationId": "downloadArtifact",
+        "summary": "经授权下载产物",
+        "tags": [
+          "artifacts"
+        ],
+        "x-implementation-status": "implemented",
+        "parameters": [
+          {
+            "name": "X-Project-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "仅接受已认证中台传递的授权上下文；不得单独作为授权凭据。"
+          },
+          {
+            "name": "X-Actor-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "description": "须与中台身份及项目授权绑定校验，非用户任意指定的身份。"
+          },
+          {
+            "name": "artifact_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "文件内容；不返回服务器物理路径",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Disposition": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "结构化错误；具体条件见对接约定",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求跟踪标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "执行服务内部错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BackendServiceBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "执行服务专用 Bearer 密钥，已绑定项目和操作者允许列表。输入密钥本身，不添加 Bearer 前缀；不要使用 SSH 密码或原生推理服务密钥。"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "request_id": {
+                "type": "string"
+              },
+              "details": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "request_id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "additionalProperties": false
+      },
+      "File": {
+        "type": "object",
+        "properties": {
+          "file_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "purpose": {
+            "type": "string",
+            "enum": [
+              "source_document",
+              "training_data",
+              "evaluation_data",
+              "prediction_data"
+            ]
+          },
+          "filename": {
+            "type": "string"
+          },
+          "content_type": {
+            "type": "string"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "file_id",
+          "purpose",
+          "filename",
+          "size_bytes",
+          "sha256",
+          "created_at"
+        ],
+        "additionalProperties": false
+      },
+      "DatasetVersionCreate": {
+        "type": "object",
+        "properties": {
+          "dataset_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "alpaca",
+              "question_set_v1"
+            ]
+          },
+          "splits": {
+            "type": "object",
+            "properties": {
+              "train": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+              },
+              "validation": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+              },
+              "test": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+              }
+            },
+            "required": [],
+            "additionalProperties": false,
+            "minProperties": 1
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "dataset_id",
+          "version",
+          "format",
+          "splits"
+        ],
+        "additionalProperties": false
+      },
+      "DatasetVersion": {
+        "type": "object",
+        "properties": {
+          "dataset_version_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "dataset_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "version": {
+            "type": "string"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "alpaca",
+              "question_set_v1"
+            ]
+          },
+          "splits": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "file_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                "sample_count": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "file_id",
+                "sha256",
+                "sample_count"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "dataset_version_id",
+          "dataset_id",
+          "version",
+          "format",
+          "splits",
+          "created_at"
+        ],
+        "additionalProperties": false
+      },
+      "Model": {
+        "type": "object",
+        "properties": {
+          "model_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "base",
+              "adapter",
+              "merged"
+            ]
+          },
+          "base_model_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_training_run_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "artifact_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            }
+          },
+          "supported_methods": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "lora",
+                "qlora",
+                "full"
+              ]
+            }
+          },
+          "max_context_tokens": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "model_id",
+          "name",
+          "kind",
+          "artifact_ids",
+          "supported_methods",
+          "max_context_tokens"
+        ],
+        "additionalProperties": false
+      },
+      "Capabilities": {
+        "type": "object",
+        "properties": {
+          "contract_version": {
+            "type": "string"
+          },
+          "supported_methods": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "lora",
+                "qlora",
+                "full"
+              ]
+            }
+          },
+          "max_upload_bytes": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "max_log_page_size": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "idempotency_retention_seconds": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "supported_dataset_formats": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "native_inference_model_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "contract_version",
+          "supported_methods",
+          "max_upload_bytes",
+          "max_log_page_size",
+          "idempotency_retention_seconds",
+          "supported_dataset_formats",
+          "native_inference_model_ids"
+        ],
+        "additionalProperties": false
+      },
+      "ResourceAssignment": {
+        "type": "object",
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "gpu_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9]+$"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "node_id",
+          "gpu_ids"
+        ],
+        "additionalProperties": false
+      },
+      "Hyperparameters": {
+        "type": "object",
+        "properties": {
+          "learning_rate": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 0.01
+          },
+          "max_steps": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "num_train_epochs": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 20
+          },
+          "cutoff_len": {
+            "type": "integer",
+            "minimum": 32,
+            "maximum": 1024
+          },
+          "per_device_train_batch_size": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2
+          },
+          "gradient_accumulation_steps": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 64
+          },
+          "lora_rank": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 32
+          },
+          "lora_dropout": {
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMaximum": 1
+          },
+          "compute_dtype": {
+            "type": "string",
+            "enum": [
+              "float16"
+            ]
+          },
+          "attention": {
+            "type": "string",
+            "enum": [
+              "sdpa"
+            ]
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "learning_rate",
+          "cutoff_len",
+          "per_device_train_batch_size",
+          "gradient_accumulation_steps",
+          "compute_dtype",
+          "attention"
+        ],
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "max_steps"
+            ]
+          },
+          {
+            "required": [
+              "num_train_epochs"
+            ]
+          }
+        ]
+      },
+      "TrainingCreate": {
+        "type": "object",
+        "properties": {
+          "business_task_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "base_model_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "dataset_version_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "lora"
+            ]
+          },
+          "hyperparameters": {
+            "$ref": "#/components/schemas/Hyperparameters"
+          },
+          "resource_assignment": {
+            "$ref": "#/components/schemas/ResourceAssignment"
+          }
+        },
+        "required": [
+          "business_task_id",
+          "base_model_id",
+          "dataset_version_id",
+          "method",
+          "hyperparameters",
+          "resource_assignment"
+        ],
+        "additionalProperties": false
+      },
+      "PredictionCreate": {
+        "type": "object",
+        "properties": {
+          "business_task_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "model_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "dataset_version_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "split": {
+            "type": "string",
+            "enum": [
+              "validation",
+              "test"
+            ]
+          },
+          "generation": {
+            "type": "object",
+            "properties": {
+              "max_new_tokens": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 256
+              },
+              "temperature": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 2
+              },
+              "seed": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "max_new_tokens"
+            ],
+            "additionalProperties": false
+          },
+          "resource_assignment": {
+            "$ref": "#/components/schemas/ResourceAssignment"
+          }
+        },
+        "required": [
+          "business_task_id",
+          "model_id",
+          "dataset_version_id",
+          "split",
+          "generation",
+          "resource_assignment"
+        ],
+        "additionalProperties": false
+      },
+      "Run": {
+        "type": "object",
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "business_task_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "training",
+              "prediction"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "accepted",
+              "running",
+              "cancel_requested",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "phase": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "progress": {
+            "type": "object",
+            "properties": {
+              "current_step": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "total_steps": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "epoch": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "completed_items": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "total_items": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0
+              }
+            },
+            "required": [],
+            "additionalProperties": false
+          },
+          "metrics": {
+            "type": "object",
+            "properties": {
+              "latest_loss": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "eval_loss": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              }
+            },
+            "required": [],
+            "additionalProperties": false
+          },
+          "artifact_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            }
+          },
+          "output_model_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "result_artifact_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "failure": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "request_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "request_id"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status_url": {
+            "type": "string",
+            "format": "uri-reference"
+          }
+        },
+        "required": [
+          "run_id",
+          "business_task_id",
+          "kind",
+          "status",
+          "created_at",
+          "progress",
+          "metrics",
+          "artifact_ids",
+          "status_url"
+        ],
+        "additionalProperties": false
+      },
+      "LogPage": {
+        "type": "object",
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sequence": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "timestamp": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "level": {
+                  "type": "string",
+                  "enum": [
+                    "DEBUG",
+                    "INFO",
+                    "WARNING",
+                    "ERROR"
+                  ]
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sequence",
+                "timestamp",
+                "level",
+                "message"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "has_more": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "run_id",
+          "entries",
+          "next_cursor",
+          "has_more"
+        ],
+        "additionalProperties": false
+      },
+      "ModelPage": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Model"
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "next_cursor"
+        ],
+        "additionalProperties": false
+      },
+      "PredictionRecord": {
+        "type": "object",
+        "properties": {
+          "question_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "raw_output": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "parse_status": {
+            "type": "string",
+            "enum": [
+              "not_attempted",
+              "parsed",
+              "parse_failed"
+            ]
+          },
+          "usage": {
+            "type": "object",
+            "properties": {
+              "prompt_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "completion_tokens": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "prompt_tokens",
+              "completion_tokens"
+            ],
+            "additionalProperties": false
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "code",
+                  "message"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "question_id",
+          "raw_output",
+          "parse_status",
+          "usage",
+          "error"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "当前访问地址（兼容 SSH 本地端口转发）"
+    }
+  ]
+}

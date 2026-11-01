@@ -1,0 +1,42 @@
+[
+  {
+    "instruction": "计算 101 加 3，只返回数字。",
+    "input": "",
+    "output": "104"
+  },
+  {
+    "instruction": "计算 102 加 3，只返回数字。",
+    "input": "",
+    "output": "105"
+  },
+  {
+    "instruction": "计算 103 加 3，只返回数字。",
+    "input": "",
+    "output": "106"
+  },
+  {
+    "instruction": "计算 104 加 3，只返回数字。",
+    "input": "",
+    "output": "107"
+  },
+  {
+    "instruction": "计算 105 加 3，只返回数字。",
+    "input": "",
+    "output": "108"
+  },
+  {
+    "instruction": "计算 106 加 3，只返回数字。",
+    "input": "",
+    "output": "109"
+  },
+  {
+    "instruction": "计算 107 加 3，只返回数字。",
+    "input": "",
+    "output": "110"
+  },
+  {
+    "instruction": "计算 108 加 3，只返回数字。",
+    "input": "",
+    "output": "111"
+  }
+]

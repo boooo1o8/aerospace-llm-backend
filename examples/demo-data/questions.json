@@ -1,0 +1,11 @@
+[
+  {
+    "question_id": "demo_q1",
+    "prompt": "计算17加25，只返回数字。",
+    "answer": "42"
+  },
+  {
+    "question_id": "demo_q2",
+    "prompt": "用一句话说明你能帮助做什么。"
+  }
+]

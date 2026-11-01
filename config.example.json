@@ -1,0 +1,23 @@
+{
+  "data_root": "/srv/aerospace-backend/data",
+  "model_root": "/srv/aerospace-backend/models",
+  "credentials_file": "/srv/aerospace-backend/config/credentials.json",
+  "cursor_key_file": "/srv/aerospace-backend/config/cursor.key",
+  "python": "/opt/aerospace-backend/.venv/bin/python",
+  "node_id": "node01",
+  "gpu_id": "0",
+  "min_free_gpu_mib": 7000,
+  "max_upload_bytes": 8388608,
+  "port": 8010,
+  "llamafactory_root": "/opt/LLaMAFactory",
+  "llamafactory_revision": "c683e59edd8f893abc5e1403184a1d0644817d2a",
+  "native_inference_model_ids": [],
+  "models": [
+    {
+      "model_id": "qwen2.5-1.5b-instruct",
+      "name": "Qwen2.5-1.5B-Instruct",
+      "path": "/srv/models/Qwen2.5-1.5B-Instruct",
+      "template": "qwen"
+    }
+  ]
+}

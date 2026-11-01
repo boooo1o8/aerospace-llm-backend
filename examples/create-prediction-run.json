@@ -1,0 +1,15 @@
+{
+  "business_task_id": "prediction_demo_001",
+  "model_id": "REPLACE_WITH_SUCCEEDED_OUTPUT_MODEL_ID",
+  "dataset_version_id": "REPLACE_WITH_QUESTION_SET_DATASET_VERSION_ID",
+  "split": "test",
+  "generation": {
+    "max_new_tokens": 64,
+    "temperature": 0,
+    "seed": 42
+  },
+  "resource_assignment": {
+    "node_id": "node01",
+    "gpu_ids": ["0"]
+  }
+}

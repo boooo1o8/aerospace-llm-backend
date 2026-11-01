@@ -1,0 +1,10 @@
+{
+  "dataset_id": "engineering-demo",
+  "version": "1",
+  "format": "alpaca",
+  "splits": {
+    "train": "REPLACE_WITH_UPLOADED_TRAIN_FILE_ID",
+    "validation": "REPLACE_WITH_UPLOADED_VALIDATION_FILE_ID"
+  },
+  "description": "工程演示数据，仅用于验证执行流程"
+}

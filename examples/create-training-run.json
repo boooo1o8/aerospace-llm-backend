@@ -1,0 +1,24 @@
+{
+  "business_task_id": "task_demo_001",
+  "base_model_id": "qwen2.5-1.5b-instruct",
+  "dataset_version_id": "dataset_version_demo_001",
+  "method": "lora",
+  "hyperparameters": {
+    "learning_rate": 0.0001,
+    "max_steps": 8,
+    "cutoff_len": 256,
+    "per_device_train_batch_size": 1,
+    "gradient_accumulation_steps": 4,
+    "lora_rank": 8,
+    "lora_dropout": 0.05,
+    "compute_dtype": "float16",
+    "attention": "sdpa",
+    "seed": 42
+  },
+  "resource_assignment": {
+    "node_id": "node01",
+    "gpu_ids": [
+      "0"
+    ]
+  }
+}

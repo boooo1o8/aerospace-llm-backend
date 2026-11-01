@@ -1,0 +1,162 @@
+[
+  {
+    "instruction": "计算 1 加 2，只返回数字。",
+    "input": "",
+    "output": "3"
+  },
+  {
+    "instruction": "计算 2 加 2，只返回数字。",
+    "input": "",
+    "output": "4"
+  },
+  {
+    "instruction": "计算 3 加 2，只返回数字。",
+    "input": "",
+    "output": "5"
+  },
+  {
+    "instruction": "计算 4 加 2，只返回数字。",
+    "input": "",
+    "output": "6"
+  },
+  {
+    "instruction": "计算 5 加 2，只返回数字。",
+    "input": "",
+    "output": "7"
+  },
+  {
+    "instruction": "计算 6 加 2，只返回数字。",
+    "input": "",
+    "output": "8"
+  },
+  {
+    "instruction": "计算 7 加 2，只返回数字。",
+    "input": "",
+    "output": "9"
+  },
+  {
+    "instruction": "计算 8 加 2，只返回数字。",
+    "input": "",
+    "output": "10"
+  },
+  {
+    "instruction": "计算 9 加 2，只返回数字。",
+    "input": "",
+    "output": "11"
+  },
+  {
+    "instruction": "计算 10 加 2，只返回数字。",
+    "input": "",
+    "output": "12"
+  },
+  {
+    "instruction": "计算 11 加 2，只返回数字。",
+    "input": "",
+    "output": "13"
+  },
+  {
+    "instruction": "计算 12 加 2，只返回数字。",
+    "input": "",
+    "output": "14"
+  },
+  {
+    "instruction": "计算 13 加 2，只返回数字。",
+    "input": "",
+    "output": "15"
+  },
+  {
+    "instruction": "计算 14 加 2，只返回数字。",
+    "input": "",
+    "output": "16"
+  },
+  {
+    "instruction": "计算 15 加 2，只返回数字。",
+    "input": "",
+    "output": "17"
+  },
+  {
+    "instruction": "计算 16 加 2，只返回数字。",
+    "input": "",
+    "output": "18"
+  },
+  {
+    "instruction": "计算 17 加 2，只返回数字。",
+    "input": "",
+    "output": "19"
+  },
+  {
+    "instruction": "计算 18 加 2，只返回数字。",
+    "input": "",
+    "output": "20"
+  },
+  {
+    "instruction": "计算 19 加 2，只返回数字。",
+    "input": "",
+    "output": "21"
+  },
+  {
+    "instruction": "计算 20 加 2，只返回数字。",
+    "input": "",
+    "output": "22"
+  },
+  {
+    "instruction": "计算 21 加 2，只返回数字。",
+    "input": "",
+    "output": "23"
+  },
+  {
+    "instruction": "计算 22 加 2，只返回数字。",
+    "input": "",
+    "output": "24"
+  },
+  {
+    "instruction": "计算 23 加 2，只返回数字。",
+    "input": "",
+    "output": "25"
+  },
+  {
+    "instruction": "计算 24 加 2，只返回数字。",
+    "input": "",
+    "output": "26"
+  },
+  {
+    "instruction": "计算 25 加 2，只返回数字。",
+    "input": "",
+    "output": "27"
+  },
+  {
+    "instruction": "计算 26 加 2，只返回数字。",
+    "input": "",
+    "output": "28"
+  },
+  {
+    "instruction": "计算 27 加 2，只返回数字。",
+    "input": "",
+    "output": "29"
+  },
+  {
+    "instruction": "计算 28 加 2，只返回数字。",
+    "input": "",
+    "output": "30"
+  },
+  {
+    "instruction": "计算 29 加 2，只返回数字。",
+    "input": "",
+    "output": "31"
+  },
+  {
+    "instruction": "计算 30 加 2，只返回数字。",
+    "input": "",
+    "output": "32"
+  },
+  {
+    "instruction": "计算 31 加 2，只返回数字。",
+    "input": "",
+    "output": "33"
+  },
+  {
+    "instruction": "计算 32 加 2，只返回数字。",
+    "input": "",
+    "output": "34"
+  }
+]

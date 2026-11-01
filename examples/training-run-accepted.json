@@ -1,0 +1,22 @@
+{
+  "run_id": "train_run_demo_001",
+  "business_task_id": "task_demo_001",
+  "kind": "training",
+  "status": "accepted",
+  "phase": null,
+  "created_at": "2026-10-23T12:00:00+08:00",
+  "progress": {
+    "current_step": null,
+    "total_steps": null,
+    "epoch": null
+  },
+  "metrics": {
+    "latest_loss": null,
+    "eval_loss": null
+  },
+  "artifact_ids": [],
+  "output_model_id": null,
+  "result_artifact_id": null,
+  "failure": null,
+  "status_url": "/internal/v1/training-runs/train_run_demo_001"
+}
